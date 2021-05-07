@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- setting控制着mybatis运行时的状态和行为，其中name和value是有很多对的，此处是日志的实现 -->
+	<settings>
+		<setting name="logImpl" value="STDOUT_LOGGING"></setting>
+	</settings>
+	
+	<!-- 取别名 -->
+	<typeAliases>
+		<typeAlias type="com.pojo.Student" alias="student"/>
+	</typeAliases>
+
+    <!--1.配置环境 ，默认的环境id为mysql-->
+    <environments default="mysql">
+        <!--1.2.配置id为mysql的数据库环境 -->
+        <environment id="mysql">
+            <!-- 使用JDBC的事务管理 -->
+            <transactionManager type="JDBC" />
+            <!--数据库连接池 -->
+            <dataSource type="POOLED">
+			  <property name="driver" value="com.mysql.jdbc.Driver" />
+			  <property name="url" 
+                            value="jdbc:mysql://localhost:3306/update_java" />
+			  <property name="username" value="root" />
+			  <property name="password" value="yyc123" />
+            </dataSource>
+        </environment>
+    </environments>
+    <!--2.配置Mapper的位置 -->
+    <mappers>
+		<mapper resource="com/mapper/StudentMapper.xml" />
+		<mapper resource="com/mapper/CardMapper.xml" />
+		<mapper resource="com/mapper/PersonMapper.xml" />
+		<mapper resource="com/mapper/ClassesMapper.xml" />
+    </mappers>
+</configuration>

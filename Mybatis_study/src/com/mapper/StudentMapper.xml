@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.StudentMapper"><!-- namespace的作用？ -->
+	<select id="selectId" parameterType="int" resultMap="map">
+		select * from student where stu_id=#{stu_id}
+	</select>
+	
+	<!-- 根据name字段模糊查找 -->
+	<select id="selectId2" parameterType="String" resultMap="map">
+		<!-- select * from student where name like "%"#{name}"%" -->
+		<!-- select * from student where name like '%${name}%' -->     <!-- Where is false qeustion?? -->
+		<!-- select * from student where name like CONCAT('%',#{name},'%') -->
+		select * from student where name like CONCAT("%",#{name},"%")
+	</select>
+	
+	<!-- 增加学生信息 -->
+	<insert id="insertId" parameterType="com.pojo.Student">
+		insert into student values(#{stu_id},#{name},#{sex},#{birth},#{classes})
+	</insert>
+	
+	<!-- 更新学生信息 -->
+	<update id="updateId" parameterType="com.pojo.Student">
+		update student set name=#{name},sex=#{sex} where stu_id=#{stu_id}
+	</update>
+	
+	<!-- 删除学生信息 -->
+	<delete id="deleteId" parameterType="int">
+		delete from student where stu_id=#{stu_id}
+	</delete>
+	
+	<!-- 查询所有学生信息 -->
+	<select id="selectAll" resultMap="map">
+		<!-- select * from student -->
+		select * from <include refid="sql"></include>
+	</select>
+	
+	<!-- 定义可重用的sql代码，然后在其他sql语句中用include引用 <include refid="sql"> -->
+	<sql id="sql">
+		student
+	</sql>
+	
+	<!-- 动态mysql中的<if>元素 -->
+	<select id="idId" parameterType="com.pojo.Student" resultMap="map"> 
+		select * from student where name like CONCAT("%",#{name},"%")
+		<if test="sex != null and '' != sex">
+			and sex=#{sex}
+		</if>
+	</select>
+	
+	<!-- 动态mysql中的<choose>、<when>、<otherwise>元素 -->
+	<select id="chooseId" parameterType="com.pojo.Student" resultMap="map">
+		select * from student where 1=1
+		<choose>
+			<when test=" stu_id != null and stu_id != '' ">
+				and stu_id=#{stu_id}
+			</when>
+			<when test=" name != null and name != '' ">
+				and name=#{name}
+			</when>
+			<otherwise>
+				and birth='2001-09-12'
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 动态mysql中的<where>元素 -->
+	<select id="whereId" parameterType="com.pojo.Student" resultMap="map">
+		select * from student
+		<where>
+			<if test="  stu_id != null and stu_id != ' '  ">
+				and stu_id=#{stu_id}
+			</if>
+			<if test=" name != null and name != ' ' ">
+				and name like CONCAT("%",#{name},"%")
+			</if>
+		</where>
+	</select>
+	
+	<!-- 动态mysql中的<set>元素 -->
+	<update id="setId" parameterType="com.pojo.Student">
+		update student
+		<set>
+			<if test=" null!=name and ''!=name ">
+				name=#{name},
+			</if>
+			<if test=" null!=sex and ''!=sex ">
+				sex=#{sex},
+			</if>
+		</set>
+		where stu_id=#{stu_id}
+	</update>
+	
+	<!-- 动态mysql中的<foreach>元素 -->
+	<select id="foreachId" resultMap="map">
+		select * from student where stu_id in
+		<foreach collection="list" item="stu_id" index="index" open="(" separator="," close=")">
+			#{stu_id}
+		</foreach>
+	</select>
+	
+	<resultMap id="map" type="com.pojo.Student">
+		<id property="stu_id" column="stu_id"></id>
+		<result property="name" column="name"></result>
+		<result property="sex" column="sex"></result>
+		<result property="birth" column="birth"></result>
+		<result property="classes" column="classes"></result>
+	</resultMap>
+</mapper>

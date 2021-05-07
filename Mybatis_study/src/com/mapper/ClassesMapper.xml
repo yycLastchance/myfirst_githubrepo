@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ClassesMapper">
+	<!-- 一对多 -->
+	<select id="onetoduo" parameterType="int" resultMap="map">
+		select * from student stu,classes cla where stu.classes=cla.class_id and cla.class_id=#{class_id}
+	</select>
+	
+	<resultMap id="map" type="com.pojo.Classes">
+		<id property="class_id" column="class_id"></id>
+		<result property="num" column="num"></result>
+		<result property="teacher" column="teacher"></result>
+		
+		<collection property="stus" ofType="com.pojo.Student">
+			<id property="stu_id" column="stu_id"></id>
+			<result property="name" column="name"></result>
+			<result property="sex" column="sex"></result>
+			<result property="birth" column="birth"></result>
+			<result property="classes" column="classes"></result>
+		</collection>
+	</resultMap>
+</mapper>

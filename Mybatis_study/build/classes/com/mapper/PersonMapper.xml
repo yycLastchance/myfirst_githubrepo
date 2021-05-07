@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.PersonMapper">
+	<select id="onetoone" resultMap="map">
+		select * from person,card where person.cardid=card.id
+	</select>
+	
+	<resultMap type="com.pojo.Person" id="map">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="num" column="num"></result>
+		<result property="cardid" column="cardid"></result>
+		<association property="card" javaType="com.pojo.Card">
+			<id property="id" column="id"></id>
+			<result property="cardnum" column="cardnum"></result>
+		</association>
+	</resultMap>
+</mapper>
